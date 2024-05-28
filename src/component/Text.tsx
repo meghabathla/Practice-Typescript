@@ -6,7 +6,7 @@ interface TextProps {
 
 export const Text: React.FC<TextProps> = (props) => {
   const { text } = props;
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState<number>(676);
 
   return (
     <div>
