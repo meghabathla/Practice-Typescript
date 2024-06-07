@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CreateContextProps {
   value: number;
@@ -6,11 +6,13 @@ interface CreateContextProps {
 }
 
 interface CounterProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 const CounterContext = createContext<CreateContextProps | null>(null);
 
-export const CounterProvider: React.FC<CounterProviderProps> = (props) => {
+export const CounterProvider: React.FC<CounterProviderProps> = ({
+  children,
+}) => {
   const [count, setCount] = useState<number>(1);
 
   return (
@@ -20,11 +22,15 @@ export const CounterProvider: React.FC<CounterProviderProps> = (props) => {
         setCount,
       }}
     >
-      {props.children}
+      {children}
     </CounterContext.Provider>
   );
 };
 
-export const useCounter = () => {
-  return useContext(CounterContext);
+export const useCounter = (): CreateContextProps => {
+  const context = useContext(CounterContext);
+  if (context === null) {
+    throw new Error("useCounter must be used within a CounterProvider");
+  }
+  return context;
 };
